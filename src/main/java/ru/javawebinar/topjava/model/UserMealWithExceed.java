@@ -1,15 +1,11 @@
 package ru.javawebinar.topjava.model;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class UserMealWithExceed {
     private final LocalDateTime dateTime;
-
     private final String description;
-
     private final int calories;
-
     private final boolean exceed;
 
     public UserMealWithExceed(LocalDateTime dateTime, String description, int calories, boolean exceed) {
@@ -20,51 +16,6 @@ public class UserMealWithExceed {
     }
 
     public UserMealWithExceed(UserMeal userMeal, boolean exceed) {
-        this.dateTime = userMeal.getDateTime();
-        this.description = userMeal.getDescription();
-        this.calories = userMeal.getCalories();
-        this.exceed = exceed;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getCalories() {
-        return calories;
-    }
-
-    public boolean isExceed() {
-        return exceed;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserMealWithExceed that = (UserMealWithExceed) o;
-        return calories == that.calories &&
-                exceed == that.exceed &&
-                Objects.equals(dateTime, that.dateTime) &&
-                Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dateTime, description, calories, exceed);
-    }
-
-    @Override
-    public String toString() {
-        return "UserMealWithExceed{" +
-                "dateTime=" + dateTime +
-                ", description='" + description + '\'' +
-                ", calories=" + calories +
-                ", exceed=" + exceed +
-                '}';
+        this(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), exceed);
     }
 }
