@@ -57,26 +57,24 @@ public class UserMealsUtil {
     public static List<UserMealWithExceed> getFilteredWithExceededByStream(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         return mealList.stream()
                 .collect(Collectors.groupingBy(userMeal -> userMeal.getDateTime().toLocalDate()))
-                .entrySet()
+                .values()
                 .stream()
-                .map(pair -> {
-                    if (pair.getValue()
-                            .stream()
-                            .mapToInt(UserMeal::getCalories)
-                            .sum() > caloriesPerDay) {
-                        return generateUserMealsWithExceed(pair.getValue(), startTime, endTime, true);
-                    } else {
-                        return generateUserMealsWithExceed(pair.getValue(), startTime, endTime, false);
-                    }
-                })
+                .map(userMeals -> generateUserMealsWithExceed(userMeals, startTime, endTime, caloriesPerDay))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 
-    private static List<UserMealWithExceed> generateUserMealsWithExceed(List<UserMeal> userMeals, LocalTime startTime, LocalTime endTime, boolean exceed) {
+    private static List<UserMealWithExceed> generateUserMealsWithExceed(List<UserMeal> userMeals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         return userMeals.stream()
                 .filter(userMeal -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
-                .map(userMeal -> new UserMealWithExceed(userMeal, exceed))
+                .map(userMeal -> new UserMealWithExceed(userMeal, isExceed(caloriesPerDay, userMeals)))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean isExceed(int caloriesPerDay, List<UserMeal> userMeals) {
+        return userMeals
+                .stream()
+                .mapToInt(UserMeal::getCalories)
+                .sum() > caloriesPerDay;
     }
 }
