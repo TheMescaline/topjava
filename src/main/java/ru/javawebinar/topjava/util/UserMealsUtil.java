@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExceed;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,7 +40,7 @@ public class UserMealsUtil {
         for (UserMeal userMeal : mealList) {
             LocalDateTime dateTime = userMeal.getDateTime();
             if (TimeUtil.isBetween(dateTime.toLocalTime(), startTime, endTime)) {
-                result.add(new UserMealWithExceed(userMeal, mapOfCaloriesByDay.get(dateTime.toLocalDate()) > caloriesPerDay));
+                result.add(convertIntoDTO(userMeal, mapOfCaloriesByDay.get(dateTime.toLocalDate()) > caloriesPerDay));
             }
         }
         return result;
@@ -58,7 +59,7 @@ public class UserMealsUtil {
     private static List<UserMealWithExceed> generateUserMealsWithExceed(List<UserMeal> userMeals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         return userMeals.stream()
                 .filter(userMeal -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
-                .map(userMeal -> new UserMealWithExceed(userMeal, isExceed(caloriesPerDay, userMeals)))
+                .map(userMeal -> convertIntoDTO(userMeal, isExceed(caloriesPerDay, userMeals)))
                 .collect(Collectors.toList());
     }
 
@@ -67,5 +68,9 @@ public class UserMealsUtil {
                 .stream()
                 .mapToInt(UserMeal::getCalories)
                 .sum() > caloriesPerDay;
+    }
+
+    private static UserMealWithExceed convertIntoDTO(UserMeal userMeal, boolean exceed) {
+        return new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), exceed);
     }
 }
