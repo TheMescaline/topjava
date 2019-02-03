@@ -51,15 +51,15 @@ public class UserMealsUtil {
                 .collect(Collectors.groupingBy(userMeal -> userMeal.getDateTime().toLocalDate()))
                 .values()
                 .stream()
-                .map(userMeals -> generateUserMealsWithExceed(userMeals, startTime, endTime, caloriesPerDay))
+                .map(userMeals -> generateUserMealsWithExceed(userMeals, startTime, endTime, isExceed(caloriesPerDay, userMeals)))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 
-    private static List<UserMealWithExceed> generateUserMealsWithExceed(List<UserMeal> userMeals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    private static List<UserMealWithExceed> generateUserMealsWithExceed(List<UserMeal> userMeals, LocalTime startTime, LocalTime endTime, boolean exceed) {
         return userMeals.stream()
                 .filter(userMeal -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
-                .map(userMeal -> convertIntoDTO(userMeal, isExceed(caloriesPerDay, userMeals)))
+                .map(userMeal -> convertIntoDTO(userMeal, exceed))
                 .collect(Collectors.toList());
     }
 
