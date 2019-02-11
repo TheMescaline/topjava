@@ -3,7 +3,8 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.service.IMealRepository;
+import ru.javawebinar.topjava.service.InMemoryMealRepository;
+import ru.javawebinar.topjava.util.MealsListInitializer;
 import ru.javawebinar.topjava.util.MealsUtil;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,29 +21,30 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
-    private IMealRepository repository;
+    private InMemoryMealRepository repository;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        repository = new IMealRepository();
+        repository = new InMemoryMealRepository();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        Long id = Long.parseLong(request.getParameter("id"));
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
         LocalDate date = LocalDate.parse(request.getParameter("mealDate"));
         LocalTime time = LocalTime.parse(request.getParameter("mealTime"));
         LocalDateTime dateTime = LocalDateTime.of(date, time);
 
-        Meal meal = new Meal(id, dateTime, description, calories);
-        if (id < 0L) {
+        String idFromRequest = request.getParameter("id");
+        Meal meal = new Meal(dateTime, description, calories);
+        if (idFromRequest == null || idFromRequest.isEmpty()) {
             repository.add(meal);
         } else {
+            meal.setId(Long.parseLong(idFromRequest));
             repository.update(meal);
         }
         response.sendRedirect("meals");
@@ -75,7 +77,7 @@ public class MealServlet extends HttpServlet {
                 meal = repository.get(Long.parseLong(request.getParameter("id")));
                 break;
             case "add":
-                meal = Meal.EMPTY;
+                meal = new Meal(LocalDateTime.MIN, "", 0);
                 break;
             default:
                 throw new IllegalArgumentException("Illegal action!");

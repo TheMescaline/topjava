@@ -3,14 +3,9 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Meal {
-    private static AtomicLong counter = new AtomicLong(0L);
-
-    public static final Meal EMPTY = new Meal(-1L, LocalDateTime.MIN, "", 0);
-
-    private final  Long id;
+    private Long id;
 
     private final LocalDateTime dateTime;
 
@@ -22,18 +17,19 @@ public class Meal {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.id = counter.getAndIncrement();
     }
 
     public Meal(Long id, LocalDateTime dateTime, String description, int calories) {
+        this(dateTime, description, calories);
         this.id = id;
-        this.dateTime = dateTime;
-        this.description = description;
-        this.calories = calories;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getDateTime() {

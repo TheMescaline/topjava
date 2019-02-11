@@ -6,12 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class IMealRepository implements MealRepository {
+public class InMemoryMealRepository implements MealRepository {
+    public static AtomicLong counter = new AtomicLong(0L);
+
     private final ConcurrentMap<Long, Meal> mealStorage = new ConcurrentHashMap<>();
 
     {
-        MealsListInitializer.getAllMeals().forEach(meal -> mealStorage.put(meal.getId(), meal));
+        MealsListInitializer.getAllMeals().forEach(meal -> {
+            meal.setId(counter.getAndIncrement());
+            mealStorage.put(meal.getId(), meal);});
     }
 
     @Override
@@ -28,9 +33,7 @@ public class IMealRepository implements MealRepository {
 
     @Override
     public void add(Meal meal) {
-        if (mealStorage.containsKey(meal.getId())) {
-            throw new IllegalArgumentException("This meal already exists");
-        }
+        meal.setId(counter.getAndIncrement());
         mealStorage.put(meal.getId(), meal);
     }
 
