@@ -6,7 +6,7 @@ import java.util.List;
 public interface MealRepository {
     void delete(Long id);
 
-    void update(Meal meal);
+    Meal update(Meal meal);
 
     Meal add(Meal meal);
 

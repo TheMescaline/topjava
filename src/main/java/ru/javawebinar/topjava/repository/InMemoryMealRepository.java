@@ -23,8 +23,9 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public void update(Meal meal) {
+    public Meal update(Meal meal) {
         mealStorage.replace(meal.getId(), meal);
+        return meal;
     }
 
     @Override
