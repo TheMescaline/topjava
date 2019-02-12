@@ -9,9 +9,7 @@
 <h3><a href="meals">Back to meals list</a></h3>
 <form action="meals" method="post">
     <input type="hidden" name="id" value="${meal.id}">
-    <label>Date</label><input type="date" name="mealDate" value="${meal.dateTime.toLocalDate()}" required>
-    <hr/>
-    <label>Time</label><input type="time" name="mealTime" value="${meal.dateTime.toLocalTime()}" required>
+    <label>Date/Time</label><input type="datetime-local" name="dateTimeMeal" value="${meal.dateTime}" required>
     <hr/>
     <label>Meal</label><input type="text" name="description" value="${meal.description}" required>
     <hr/>
