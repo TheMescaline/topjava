@@ -4,14 +4,14 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsListInitializer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryMealRepository implements MealRepository {
     private static AtomicLong counter = new AtomicLong(0L);
 
-    private final ConcurrentMap<Long, Meal> mealStorage = new ConcurrentHashMap<>();
+    private final Map<Long, Meal> mealStorage = new ConcurrentHashMap<>();
 
     {
         MealsListInitializer.getAllMeals().forEach(this::add);

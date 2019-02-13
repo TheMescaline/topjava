@@ -8,15 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
 public class MealsUtil {
     public static List<MealTo> getAllWithExcess(List<Meal> meals, int caloriesPerDay) {
         return getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
-    }
-
-    public static List<MealTo> getAllWithoutExcess(List<Meal> meals) {
-        return meals.stream().map(meal -> createWithExcess(meal, false)).collect(toList());
     }
 
     public static List<MealTo> getFilteredWithExcess(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
