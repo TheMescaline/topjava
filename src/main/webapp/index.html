@@ -8,7 +8,17 @@
 <hr>
 <ul>
     <li><a href="users">Users</a></li>
-    <li><a href="meals">Meals</a></li>
+    <li><form method="post" action="users" >
+        <label>
+            <input type="radio" name="userId" value="1" checked>
+            Login as user with ID = 1
+        </label><br>
+        <label>
+            <input type="radio" name="userId" value="2">
+            Login as user with ID = 2
+        </label><br>
+        <input type="submit" value="Checkout your meal">
+    </form></li>
 </ul>
 </body>
 </html>
