@@ -20,6 +20,15 @@
 <section>
     <h3><a href="index.html">Home</a></h3>
     <h2>Meals</h2>
+
+    <div>
+        <form method="get" action="meals">
+        <label>От даты<input type="date" name="startDate" value="${param.startDate}"></label><div style="width: 80px; display: inline"></div><label>От времени<input type="time" name="startTime" value="${param.startTime}"></label><br/>
+        <label>До даты<input type="date" name="endDate" value="${param.endDate}"></label><div style="width: 80px; display: inline"></div><label>До времени<input type="time" name="endTime" value="${param.endTime}"></label><br/>
+            <input type="submit" value="Filter">
+        </form>
+    </div>
+
     <a href="meals?action=create">Add Meal</a>
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">
