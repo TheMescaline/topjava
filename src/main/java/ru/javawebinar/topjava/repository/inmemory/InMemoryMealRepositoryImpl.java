@@ -9,13 +9,11 @@ import ru.javawebinar.topjava.web.SecurityUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
@@ -24,41 +22,45 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
-        repository.put(2, new HashMap<Integer, Meal>() {{
-            put(15, new Meal(15, LocalDateTime.of(2016, Month.MARCH, 11, 10, 0), "Завтрак", 1000));
-            put(16, new Meal(16, LocalDateTime.of(2016, Month.MARCH, 11, 13, 0), "Обед", 500));
-            put(17, new Meal(17, LocalDateTime.of(2016, Month.MARCH, 11, 20, 0), "Ужин", 510));
-        }});
+//        MealsUtil.FIRST_USER_MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
+        SecurityUtil.setAuthUserId(2);
+        MealsUtil.SECOND_USER_MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
+        SecurityUtil.setAuthUserId(1);
     }
 
     @Override
     public Meal save(int userId, Meal meal) {
-        repository.putIfAbsent(userId, new HashMap<>());
+        Map<Integer, Meal> currentUserMeals = repository.computeIfAbsent(userId, HashMap::new);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.get(userId).put(meal.getId(), meal);
+            currentUserMeals.put(meal.getId(), meal);
             return meal;
         }
-        // treat case: update, but absent in storage
-        return repository.get(userId).computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        return currentUserMeals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
     public boolean delete(int userId, int id) {
-        return repository.getOrDefault(userId, new HashMap<>()).remove(id) != null;
+        Map<Integer, Meal> currentUserMeals = repository.get(userId);
+        return currentUserMeals != null && currentUserMeals.remove(id) != null;
     }
 
     @Override
     public Meal get(int userId, int id) {
-        return repository.getOrDefault(userId, new HashMap<>()).get(id);
+        Map<Integer, Meal> currentUserMeals = repository.get(userId);
+        return currentUserMeals == null ? null : currentUserMeals.get(id);
     }
 
     @Override
-    public List<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate) {
-        return repository.getOrDefault(userId, new HashMap<>())
-                .values()
-                .stream()
+    public List<Meal> getAll(int userId) {
+        Map<Integer, Meal> currentUserMeals = repository.get(userId);
+        return currentUserMeals == null ? Collections.emptyList() : new ArrayList<>(currentUserMeals.values());
+    }
+
+    @Override
+    public List<Meal> getAllFiltered(int userId, LocalDate startDate, LocalDate endDate) {
+        List<Meal> currentUserMeals = getAll(userId);
+        return currentUserMeals.isEmpty() ? currentUserMeals : currentUserMeals.stream()
                 .filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
                 .sorted(Comparator.comparing(Meal::getDate).reversed())
                 .collect(Collectors.toList());

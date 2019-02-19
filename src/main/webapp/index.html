@@ -9,14 +9,10 @@
 <ul>
     <li><a href="users">Users</a></li>
     <li><form method="post" action="users" >
-        <label>
-            <input type="radio" name="userId" value="1" checked>
-            Login as user with ID = 1
-        </label><br>
-        <label>
-            <input type="radio" name="userId" value="2">
-            Login as user with ID = 2
-        </label><br>
+        <select name="userId">
+            <option value="1">Login as user with ID = 1</option>
+            <option value="2">Login as user with ID = 2</option>
+        </select><br>
         <input type="submit" value="Checkout your meal">
     </form></li>
 </ul>

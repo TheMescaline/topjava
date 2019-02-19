@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.SecurityUtil;
 import java.time.LocalDate;
@@ -42,14 +43,25 @@ public class MealRestController {
         return mealService.get(SecurityUtil.authUserId(), id);
     }
 
-    public void update(Meal meal) {
+    public void update(Meal meal, int id) {
         log.info("Update {}", meal.getId());
+        ValidationUtil.assureIdConsistent(meal, id);
         mealService.update(SecurityUtil.authUserId(), meal);
     }
 
-    public List<MealTo> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        log.info("Get all filtered");
+    public List<MealTo> getAll() {
+        log.info("Get all");
         int userId = SecurityUtil.authUserId();
-        return MealsUtil.getFilteredWithExcess(mealService.getAll(userId, startDate, endDate), userService.get(userId).getCaloriesPerDay(), startTime, endTime);
+        return MealsUtil.getWithExcess(mealService.getAll(userId), userService.get(userId).getCaloriesPerDay());
+    }
+
+    public List<MealTo> getAllFiltered(String startDateFromRequest, String endDateFromRequest, String startTimeFromRequest, String endTimeFromRequest) {
+        log.info("Get all filtered");
+        LocalDate startDate = startDateFromRequest == null || startDateFromRequest.isEmpty() ? LocalDate.MIN : LocalDate.parse(startDateFromRequest);
+        LocalDate endDate = endDateFromRequest == null || endDateFromRequest.isEmpty() ? LocalDate.MAX : LocalDate.parse(endDateFromRequest);
+        LocalTime startTime = startTimeFromRequest == null || startTimeFromRequest.isEmpty() ? LocalTime.MIN : LocalTime.parse(startTimeFromRequest);
+        LocalTime endTime = endTimeFromRequest == null || endTimeFromRequest.isEmpty() ? LocalTime.MAX : LocalTime.parse(endTimeFromRequest);
+        int userId = SecurityUtil.authUserId();
+        return MealsUtil.getFilteredWithExcess(mealService.getAllFiltered(userId, startDate, endDate), userService.get(userId).getCaloriesPerDay(), startTime, endTime);
     }
 }

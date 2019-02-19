@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,10 +54,10 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        log.info("getAll");
-        return repository.values().stream().
-                sorted(Comparator.comparing(User::getName).thenComparing(User::getRegistered).reversed()).
-                collect(Collectors.toList());
+        log.info("getAllFiltered");
+        return repository.values().stream()
+                .sorted(Comparator.comparing(User::getName).thenComparing((o1, o2) -> o2.getRegistered().compareTo(o1.getRegistered())))
+                .collect(Collectors.toList());
     }
 
     @Override

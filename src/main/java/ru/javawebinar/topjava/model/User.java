@@ -12,13 +12,13 @@ public class User extends AbstractNamedEntity {
 
     private String password;
 
-    private boolean enabled;
+    private boolean enabled = true;
 
     private Date registered = new Date();
 
     private Set<Role> roles;
 
-    private int caloriesPerDay;
+    private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     public User(String name, String email, String password, Set<Role> roles) {
         this(null, name, email, password, DEFAULT_CALORIES_PER_DAY, true, roles);

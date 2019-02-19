@@ -20,14 +20,20 @@ import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
+    private ConfigurableApplicationContext appCtx;
     private MealRestController mealRestController;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
-            this.mealRestController = appCtx.getBean(MealRestController.class);
-        }
+        this.appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        this.mealRestController = appCtx.getBean(MealRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        appCtx.close();
     }
 
     @Override
@@ -38,15 +44,13 @@ public class MealServlet extends HttpServlet {
         int calories = Integer.parseInt(request.getParameter("calories"));
 
         String id = request.getParameter("id");
-        Meal meal;
+        Meal meal = new Meal(null, dateTime, description, calories);
         if (id.isEmpty()) {
-            meal = new Meal(null, dateTime, description, calories);
             log.info("Create {}", meal);
             mealRestController.create(meal);
         } else {
-            meal = new Meal(Integer.valueOf(id), dateTime, description, calories);
             log.info("Update {}", meal);
-            mealRestController.update(meal);
+            mealRestController.update(meal, Integer.valueOf(id));
         }
         response.sendRedirect("meals");
     }
@@ -60,7 +64,7 @@ public class MealServlet extends HttpServlet {
                 log.info("Delete {}", id);
                 mealRestController.delete(id);
                 response.sendRedirect("meals");
-                break;
+                return;
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
@@ -69,22 +73,21 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
-            case "all":
-            default:
+            case "filter":
                 String startDateFromRequest = request.getParameter("startDate");
                 String endDateFromRequest = request.getParameter("endDate");
                 String startTimeFromRequest = request.getParameter("startTime");
                 String endTimeFromRequest = request.getParameter("endTime");
-                LocalDate startDate = startDateFromRequest == null || startDateFromRequest.isEmpty() ? LocalDate.MIN : LocalDate.parse(startDateFromRequest);
-                LocalDate endDate = endDateFromRequest == null || endDateFromRequest.isEmpty() ? LocalDate.MAX : LocalDate.parse(endDateFromRequest);
-                LocalTime startTime = startTimeFromRequest == null || startTimeFromRequest.isEmpty() ? LocalTime.MIN : LocalTime.parse(startTimeFromRequest);
-                LocalTime endTime = endTimeFromRequest == null || endTimeFromRequest.isEmpty() ? LocalTime.MAX : LocalTime.parse(endTimeFromRequest);
-                log.info("getAll");
+                log.info("getAllFiltered");
                 request.setAttribute("meals",
-                        mealRestController.getAll(startDate, endDate, startTime, endTime));
-                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                        mealRestController.getAllFiltered(startDateFromRequest, endDateFromRequest, startTimeFromRequest, endTimeFromRequest));
+                break;
+            default:
+                log.info("getAll");
+                request.setAttribute("meals", mealRestController.getAll());
                 break;
         }
+        request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 
     private int getId(HttpServletRequest request) {
