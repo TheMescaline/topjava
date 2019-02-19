@@ -7,13 +7,10 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
@@ -22,7 +19,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-//        MealsUtil.FIRST_USER_MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
+        MealsUtil.FIRST_USER_MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
         SecurityUtil.setAuthUserId(2);
         MealsUtil.SECOND_USER_MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
         SecurityUtil.setAuthUserId(1);
