@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -76,9 +78,13 @@ public class MealServlet extends HttpServlet {
                 String endDateFromRequest = request.getParameter("endDate");
                 String startTimeFromRequest = request.getParameter("startTime");
                 String endTimeFromRequest = request.getParameter("endTime");
+                LocalDate startDate = startDateFromRequest == null || startDateFromRequest.isEmpty() ? null : LocalDate.parse(startDateFromRequest);
+                LocalDate endDate = endDateFromRequest == null || endDateFromRequest.isEmpty() ? null : LocalDate.parse(endDateFromRequest);
+                LocalTime startTime = startTimeFromRequest == null || startTimeFromRequest.isEmpty() ? null : LocalTime.parse(startTimeFromRequest);
+                LocalTime endTime = endTimeFromRequest == null || endTimeFromRequest.isEmpty() ? null : LocalTime.parse(endTimeFromRequest);
                 log.info("getAllFiltered");
                 request.setAttribute("meals",
-                        mealRestController.getAllFiltered(startDateFromRequest, endDateFromRequest, startTimeFromRequest, endTimeFromRequest));
+                        mealRestController.getAllFiltered(startDate, endDate, startTime, endTime));
                 break;
             default:
                 log.info("getAll");

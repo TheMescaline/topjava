@@ -21,11 +21,9 @@ public class MealRestController {
     private static final Logger log = getLogger(MealRestController.class);
 
     private final MealService mealService;
-    private final UserService userService;
 
     public MealRestController(MealService mealService, UserService userService) {
         this.mealService = mealService;
-        this.userService = userService;
     }
     
     public Meal create(Meal meal) {
@@ -52,16 +50,16 @@ public class MealRestController {
     public List<MealTo> getAll() {
         log.info("Get all");
         int userId = SecurityUtil.authUserId();
-        return MealsUtil.getWithExcess(mealService.getAll(userId), userService.get(userId).getCaloriesPerDay());
+        return MealsUtil.getWithExcess(mealService.getAll(userId), SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public List<MealTo> getAllFiltered(String startDateFromRequest, String endDateFromRequest, String startTimeFromRequest, String endTimeFromRequest) {
+    public List<MealTo> getAllFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("Get all filtered");
-        LocalDate startDate = startDateFromRequest == null || startDateFromRequest.isEmpty() ? LocalDate.MIN : LocalDate.parse(startDateFromRequest);
-        LocalDate endDate = endDateFromRequest == null || endDateFromRequest.isEmpty() ? LocalDate.MAX : LocalDate.parse(endDateFromRequest);
-        LocalTime startTime = startTimeFromRequest == null || startTimeFromRequest.isEmpty() ? LocalTime.MIN : LocalTime.parse(startTimeFromRequest);
-        LocalTime endTime = endTimeFromRequest == null || endTimeFromRequest.isEmpty() ? LocalTime.MAX : LocalTime.parse(endTimeFromRequest);
         int userId = SecurityUtil.authUserId();
-        return MealsUtil.getFilteredWithExcess(mealService.getAllFiltered(userId, startDate, endDate), userService.get(userId).getCaloriesPerDay(), startTime, endTime);
+        return MealsUtil.getFilteredWithExcess(mealService.getAllFiltered(userId,
+                startDate == null ? LocalDate.MIN : startDate,
+                endDate == null ? LocalDate.MAX : endDate),
+                SecurityUtil.authUserCaloriesPerDay(), startTime == null ? LocalTime.MIN : startTime,
+                endTime == null ? LocalTime.MAX : endTime);
     }
 }

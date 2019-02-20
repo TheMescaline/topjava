@@ -7,9 +7,14 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
@@ -50,15 +55,19 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        Map<Integer, Meal> currentUserMeals = repository.get(userId);
-        return currentUserMeals == null ? Collections.emptyList() : new ArrayList<>(currentUserMeals.values());
+        return getFiltered(userId, meal -> true);
     }
 
     @Override
     public List<Meal> getAllFiltered(int userId, LocalDate startDate, LocalDate endDate) {
-        List<Meal> currentUserMeals = getAll(userId);
-        return currentUserMeals.isEmpty() ? currentUserMeals : currentUserMeals.stream()
-                .filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
+        return getFiltered(userId, meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate));
+    }
+
+    private List<Meal> getFiltered(int userId, Predicate<Meal> filter) {
+        Map<Integer, Meal> currentUserMeals = repository.get(userId);
+        return currentUserMeals.isEmpty() ? Collections.emptyList() : currentUserMeals.values()
+                .stream()
+                .filter(filter)
                 .sorted(Comparator.comparing(Meal::getDate).reversed())
                 .collect(Collectors.toList());
     }
