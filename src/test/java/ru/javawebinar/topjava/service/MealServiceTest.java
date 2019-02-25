@@ -16,11 +16,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
-import static ru.javawebinar.topjava.MealTestData.FIRST_ADMIN_MEAL;
-import static ru.javawebinar.topjava.MealTestData.LAST_ADMIN_MEAL;
-import static ru.javawebinar.topjava.MealTestData.MID_ADMIN_MEAL;
-import static ru.javawebinar.topjava.MealTestData.USER_MEAL_ID;
-import static ru.javawebinar.topjava.MealTestData.assertMatch;
+import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
@@ -43,7 +39,7 @@ public class MealServiceTest {
 
     @Test
     public void get() {
-        Meal meal = service.get(LAST_ADMIN_MEAL.getId(), ADMIN_ID);
+        Meal meal = service.get(LAST_ADMIN_MEAL_ID, ADMIN_ID);
         assertMatch(meal, LAST_ADMIN_MEAL);
     }
 
@@ -54,7 +50,7 @@ public class MealServiceTest {
 
     @Test
     public void delete() {
-        service.delete(LAST_ADMIN_MEAL.getId(), ADMIN_ID);
+        service.delete(LAST_ADMIN_MEAL_ID, ADMIN_ID);
         assertMatch(service.getAll(ADMIN_ID), MID_ADMIN_MEAL, FIRST_ADMIN_MEAL);
     }
 
@@ -81,7 +77,7 @@ public class MealServiceTest {
         Meal updated = new Meal(LAST_ADMIN_MEAL);
         updated.setDescription("UPDATED");
         service.update(updated, ADMIN_ID);
-        assertMatch(service.get(LAST_ADMIN_MEAL.getId(), ADMIN_ID), updated);
+        assertMatch(service.get(LAST_ADMIN_MEAL_ID, ADMIN_ID), updated);
     }
 
     @Test(expected = NotFoundException.class)

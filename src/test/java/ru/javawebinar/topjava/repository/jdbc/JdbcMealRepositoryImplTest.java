@@ -14,11 +14,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static ru.javawebinar.topjava.MealTestData.FIRST_ADMIN_MEAL;
-import static ru.javawebinar.topjava.MealTestData.LAST_ADMIN_MEAL;
-import static ru.javawebinar.topjava.MealTestData.MID_ADMIN_MEAL;
-import static ru.javawebinar.topjava.MealTestData.USER_MEAL_ID;
-import static ru.javawebinar.topjava.MealTestData.assertMatch;
+import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
@@ -57,7 +53,7 @@ public class JdbcMealRepositoryImplTest {
 
     @Test
     public void delete() {
-        jdbcMealRepository.delete(LAST_ADMIN_MEAL.getId(), ADMIN_ID);
+        jdbcMealRepository.delete(LAST_ADMIN_MEAL_ID, ADMIN_ID);
         assertMatch(jdbcMealRepository.getAll(ADMIN_ID), MID_ADMIN_MEAL, FIRST_ADMIN_MEAL);
     }
 
@@ -68,7 +64,7 @@ public class JdbcMealRepositoryImplTest {
 
     @Test
     public void get() {
-        Meal meal = jdbcMealRepository.get(LAST_ADMIN_MEAL.getId(), ADMIN_ID);
+        Meal meal = jdbcMealRepository.get(LAST_ADMIN_MEAL_ID, ADMIN_ID);
         assertMatch(meal, LAST_ADMIN_MEAL);
     }
 
