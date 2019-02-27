@@ -21,7 +21,6 @@ import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({
-        "classpath:spring/spring-jdbc.xml",
         "classpath:spring/spring-main.xml",
         "classpath:spring/spring-db.xml"
 })

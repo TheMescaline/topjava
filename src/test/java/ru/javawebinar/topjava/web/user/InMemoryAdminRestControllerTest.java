@@ -22,7 +22,7 @@ public class InMemoryAdminRestControllerTest {
 
     @BeforeClass
     public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("classpath:spring/spring-test.xml", "classpath:spring/spring-main.xml", "classpath:spring/spring-db.xml");
+        appCtx = new ClassPathXmlApplicationContext("classpath:spring/spring-test.xml", "classpath:spring/spring-main.xml");
         System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
         controller = appCtx.getBean(AdminRestController.class);
     }
