@@ -1,4 +1,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/61a0bfa85acd423fb88fb8dbb1e125b3)](https://www.codacy.com/app/TheMescaline/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TheMescaline/topjava&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/TheMescaline/topjava.svg?branch=master)](https://travis-ci.org/TheMescaline/topjava)
 
 Java Enterprise Online Project 
 ===============================
