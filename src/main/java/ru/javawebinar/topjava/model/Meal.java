@@ -1,19 +1,45 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@NamedQueries({
+        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id = :id AND m.user.id = :user_id"),
+        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.user.id = :user_id ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.BETWEEN_DATES, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.user.id = :user_id AND m.dateTime BETWEEN :startDate AND :endDate ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.FIND, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.user.id = :user_id AND m.id = :id")
+})
+@Entity
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
+    public static final String DELETE = "Meal.delete";
+    public static final String ALL_SORTED = "Meal.allSorted";
+    public static final String BETWEEN_DATES = "Meal.betweenDates";
+    public static final String FIND = "Meal.find";
+
+    @Column(name = "date_time", nullable = false)
+    @NotNull
     private LocalDateTime dateTime;
 
+    @Column(name = "description", nullable = false)
+    @NotBlank
+    @Size(max = 50)
     private String description;
 
+    @Column(name = "calories", nullable = false)
+    @NotNull
+    @Min(0)
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     public Meal() {
@@ -77,6 +103,7 @@ public class Meal extends AbstractBaseEntity {
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
+                ", user_id=" + user +
                 '}';
     }
 }
