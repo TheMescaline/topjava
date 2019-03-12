@@ -19,4 +19,8 @@ public interface MealRepository {
 
     // ORDERED dateTime desc
     List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId);
+
+    default Meal getWithUser(int id, int userId) {
+        throw new IllegalStateException("Default method getWithUser() are not implemented in repository");
+    }
 }

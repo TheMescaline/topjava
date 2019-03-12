@@ -45,7 +45,7 @@ public abstract class AbstractServiceTest {
                 "\n---------------------------------" +
                 results +
                 "\n---------------------------------");
-        results.delete(0, results.length());
+        results.setLength(0);
     }
 
 

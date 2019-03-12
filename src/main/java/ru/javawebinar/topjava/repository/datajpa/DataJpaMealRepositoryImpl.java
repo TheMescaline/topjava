@@ -32,12 +32,12 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        return crudRepository.deleteUserByIdAndUserId(id, userId) != 0;
+        return crudRepository.deleteByIdAndUserId(id, userId) != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        return crudRepository.findMealByIdAndUserId(id, userId);
+        return crudRepository.findByIdAndUserId(id, userId);
     }
 
     @Override
@@ -50,6 +50,7 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
         return crudRepository.getAllBetween(startDate, endDate, userId);
     }
 
+    @Override
     public Meal getWithUser(int id, int userId) {
         return crudRepository.findWithUser(id, userId);
     }
