@@ -12,14 +12,15 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
-    @Transactional
     int deleteUserByIdAndUserId(int id, int userId);
 
     @Override
-    @Transactional
-    Meal save(Meal meal);
 
+    Meal save(Meal meal);
     Meal findMealByIdAndUserId(int id, int userId);
+
+    @Query("SELECT m FROM Meal m JOIN FETCH m.user WHERE m.id = :id AND m.user.id = :userId")
+    Meal findWithUser(@Param("id") int id, @Param("userId") int userId);
 
     List<Meal> findAllByUserId(int userId, Sort sort);
 
