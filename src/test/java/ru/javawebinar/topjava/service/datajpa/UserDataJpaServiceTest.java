@@ -21,7 +21,7 @@ public class UserDataJpaServiceTest extends UserServiceTest {
     public void getWithMealsTest() {
         User user = service.getWithMeals(ADMIN_ID);
         UserTestData.assertMatch(user, ADMIN);
-        MealTestData.assertMatch(user.getMeals(), Arrays.asList(ADMIN_MEAL1, ADMIN_MEAL2));
+        MealTestData.assertMatch(user.getMeals(), Arrays.asList(ADMIN_MEAL2, ADMIN_MEAL1));
     }
 
     @Test
