@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.User;
+
 import java.util.List;
 
 public interface UserRepository {
@@ -18,6 +19,6 @@ public interface UserRepository {
     List<User> getAll();
 
     default User getWithMeals(int id) {
-        throw new IllegalStateException("Default method getWithMeals() are not implemented in repository");
+        throw new UnsupportedOperationException("Default method getWithMeals() are not implemented in repository");
     }
 }

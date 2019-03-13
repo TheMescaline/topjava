@@ -13,14 +13,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static ru.javawebinar.topjava.UserTestData.ADMIN;
-import static ru.javawebinar.topjava.UserTestData.USER;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
-import static ru.javawebinar.topjava.UserTestData.assertMatch;
+import static ru.javawebinar.topjava.UserTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -47,7 +45,7 @@ public abstract class UserServiceTest extends AbstractServiceTest{
         User created = service.create(newUser);
         newUser.setId(created.getId());
         assertMatch(newUser, created);
-        assertMatch(service.getAll(), ADMIN, newUser, USER);
+        assertMatch(service.getAll(), ADMIN, newUser, USER, USER_WITHOUT_MEALS);
     }
 
     @Test(expected = DataAccessException.class)
@@ -58,7 +56,7 @@ public abstract class UserServiceTest extends AbstractServiceTest{
     @Test
     public void delete() throws Exception {
         service.delete(USER_ID);
-        assertMatch(service.getAll(), ADMIN);
+        assertMatch(service.getAll(), ADMIN, USER_WITHOUT_MEALS);
     }
 
     @Test(expected = NotFoundException.class)
@@ -95,6 +93,6 @@ public abstract class UserServiceTest extends AbstractServiceTest{
     @Test
     public void getAll() throws Exception {
         List<User> all = service.getAll();
-        assertMatch(all, ADMIN, USER);
+        assertMatch(all, ADMIN, USER, USER_WITHOUT_MEALS);
     }
 }

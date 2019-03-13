@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
+
+import javax.persistence.OrderBy;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +27,8 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     @Override
     Optional<User> findById(Integer id);
 
-    @Query("SELECT u FROM User u JOIN FETCH u.meals WHERE u.id = :id")
+    @OrderBy("date_time desc")
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.meals WHERE u.id = :id")
     User findWithMeals(@Param("id") int id);
 
     @Override
