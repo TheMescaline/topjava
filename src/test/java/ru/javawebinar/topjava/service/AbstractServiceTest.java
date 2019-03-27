@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
@@ -20,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
 import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.TimingRules;
+
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -50,13 +50,13 @@ abstract public class AbstractServiceTest {
         SLF4JBridgeHandler.install();
     }
 
-    @Test
-    public void testValidation() throws Exception {
-        Assume.assumeFalse(Arrays.asList(environment.getActiveProfiles()).contains(Profiles.JDBC));
-        validate();
+    protected boolean isJdbcInActiveProfiles() {
+        return Arrays.asList(environment.getActiveProfiles()).contains(Profiles.JDBC);
     }
 
-    protected abstract void validate();
+    protected void validateTestSkipCheck() throws Exception {
+        Assume.assumeFalse(isJdbcInActiveProfiles());
+    }
 
     //  Check root cause in JUnit: https://github.com/junit-team/junit4/pull/778
     public <T extends Throwable> void validateRootCause(Runnable runnable, Class<T> exceptionClass) {
