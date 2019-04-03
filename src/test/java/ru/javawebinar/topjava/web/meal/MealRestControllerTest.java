@@ -9,10 +9,7 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,8 +81,10 @@ class MealRestControllerTest extends AbstractControllerTest {
     void getBetween() throws Exception {
         mockMvc.perform(
                 get(MealRestController.REST_URL + "/between")
-                        .param("startDateTime", "2015-05-31T12:00")
-                        .param("endDateTime", "2015-05-31T19:00"))
+                        .param("startDate", "2015-05-31")
+                        .param("startTime", "12:00")
+                        .param("endDate", "2015-05-31")
+                        .param("endTime", "19:00"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
