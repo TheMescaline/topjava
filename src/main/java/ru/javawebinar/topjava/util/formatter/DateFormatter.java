@@ -4,20 +4,20 @@ import org.springframework.format.Formatter;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.Locale;
 
-public class StartTimeFormatter implements Formatter<LocalTime> {
+public class DateFormatter implements Formatter<LocalDate> {
     @Override
-    public LocalTime parse(String text, Locale locale) throws ParseException {
+    public LocalDate parse(String text, Locale locale) throws ParseException {
         if (StringUtils.isEmpty(text)) {
-            return LocalTime.MIN;
+            return null;
         }
-        return LocalTime.parse(text);
+        return LocalDate.parse(text);
     }
 
     @Override
-    public String print(LocalTime object, Locale locale) {
+    public String print(LocalDate object, Locale locale) {
         return object.toString();
     }
 }

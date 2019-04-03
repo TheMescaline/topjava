@@ -32,11 +32,8 @@
           class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="formatters">
             <set>
-                <bean class="ru.javawebinar.topjava.util.formatter.StartDateFormatter"/>
-                <bean class="ru.javawebinar.topjava.util.formatter.StartTimeFormatter"/>
-                <bean class="ru.javawebinar.topjava.util.formatter.EndDateFormatter"/>
-                <bean class="ru.javawebinar.topjava.util.formatter.EndTimeFormatter"/>
-                <bean class="ru.javawebinar.topjava.util.formatter.DateTimeFormatAnnotationFormatterFactory"/>
+                <bean class="ru.javawebinar.topjava.util.formatter.DateFormatter"/>
+                <bean class="ru.javawebinar.topjava.util.formatter.TimeFormatter"/>
             </set>
         </property>
     </bean>

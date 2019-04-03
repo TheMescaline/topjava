@@ -10,6 +10,11 @@ Get list of meals filtered by dates and time:
     curl -X GET \
     'http://localhost:8080/topjava/rest/profile/meals/between?startDate=2015-05-31&startTime=12:00&endDate=2015-05-31&endTime=19:00'
     
+Get list of meals filtered by dates and time (with empty/null parameters)
+
+    curl -X GET \
+      'http://localhost:8080/topjava/rest/profile/meals/between?startDate=&endDate=2015-05-31'
+    
 Get one specific meal:
 
     curl -X GET \
